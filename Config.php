@@ -1,7 +1,12 @@
 <?php
 namespace Skel;
 
-class Config implements  {
+class Config implements Interfaces\Config {
+  //Execution Profiles
+  const PROFILE_PROD = 1;
+  const PROFILE_BETA = 2;
+  const PROFILE_TEST = 4;
+
   protected $config;
 
   public function checkConfig() {
@@ -29,7 +34,7 @@ class Config implements  {
     if (count($errors) > 0) throw new RuntimeException("Your configuration is incomplete:\n\n".implode("\n  ", $errors));
   }
 
-  public function __construct(string $baseFilename bool $checkConfig=true) {
+  public function __construct(string $baseFilename) {
     $global = "$baseFilename.php";
     $local = "$baseFilename.local.php";
     if (!is_file($global)) throw new NonexistentFileException("You must have a global configurations file named `".basename("$baseFilename.php")."` in the expected location (even if it's empty).");
@@ -41,12 +46,16 @@ class Config implements  {
     if (!is_array($global) || !is_array($local)) throw new \RuntimeException("Configuration files should return an array of configurations");
 
     $this->config = array_replace($global, $local);
-    if ($checkConfig) $this->configCheck();
+    if ($this->getExecutionProfile() != static::PROFILE_PROD) $this->checkConfig();
   }
 
   public function get(string $key) {
     if (!isset($this->config[$key])) throw new NonexistentConfigException("Your configuration doesn't have a value for the key `$key`");
     return $this->config[$key];
+  }
+
+  public function getExecutionProfile() {
+    return $this->get('exec-profile');
   }
 
   public function dump() {
