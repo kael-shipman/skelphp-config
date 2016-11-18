@@ -44,6 +44,7 @@ class Config implements Interfaces\Config {
     $local = require $local;
 
     if (!is_array($global) || !is_array($local)) throw new \RuntimeException("Configuration files should return an array of configurations");
+    if (count(array_diff(array_keys($local), array_keys($global))) > 0) throw new \RuntimeException("Your local configuration file contains configurations that are not defined globally! This is risky because local config files are not version-controlled, and the program may not throw errors for missing config until running in a production environment. Please define ALL configuration keys in the global file first, then use the local file to override them.");
 
     $this->config = array_replace($global, $local);
     if ($this->getExecutionProfile() != static::PROFILE_PROD) $this->checkConfig();
