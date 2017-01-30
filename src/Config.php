@@ -50,7 +50,7 @@ class Config implements Interfaces\Config {
     if ($this->getExecutionProfile() != static::PROFILE_PROD) $this->checkConfig();
   }
 
-  public function get(string $key) {
+  protected function get(string $key) {
     if (!isset($this->config[$key])) throw new NonexistentConfigException("Your configuration doesn't have a value for the key `$key`");
     return $this->config[$key];
   }
@@ -63,11 +63,6 @@ class Config implements Interfaces\Config {
     $dump = array();
     foreach ($this->config as $k => $v) $dump[] = "$k: `$v`;";
     return implode("\n", $dump);
-  }
-
-  public function set(string $key, $val) {
-    $this->config[$key] = $val;
-    return $this;
   }
 }
 
