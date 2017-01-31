@@ -31,7 +31,7 @@ class Config implements Interfaces\Config {
       }
     }
     
-    if (count($errors) > 0) throw new RuntimeException("Your configuration is incomplete:\n\n".implode("\n  ", $errors));
+    if (count($errors) > 0) throw new \RuntimeException("Your configuration is incomplete:\n\n".implode("\n  ", $errors));
   }
 
   public function __construct(string $baseFilename) {
