@@ -25,7 +25,12 @@ class Config implements Interfaces\Config {
     $errors = array();
     foreach($check as $m) {
       try {
-        $this->$m();
+        $testParams = $this->getTestParams();
+        if (!array_key_exists($m, $testParams)) $this->$m();
+        else {
+          if (!is_array($testParams[$m])) $testParams[$m] = array($testParams[$m]);
+          call_user_func_array(array($this, $m), $testParams[$m]);
+        }
       } catch (NonexistentConfigException $e) {
         $errors[] = $e->getMessage();
       }
