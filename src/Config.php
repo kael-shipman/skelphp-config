@@ -69,6 +69,10 @@ class Config implements Interfaces\Config {
     foreach ($this->config as $k => $v) $dump[] = "$k: `$v`;";
     return implode("\n", $dump);
   }
+
+  protected function getTestParams() {
+    return array();
+  }
 }
 
 
